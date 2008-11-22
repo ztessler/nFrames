@@ -1,0 +1,117 @@
+<!DOCTYPE lsml SYSTEM "nFrames.dtd">
+<!--Multi layout Hydrological Model-->
+<model name="Multi-layout Hydrological Model" version="1.0" begin="2000-01-01" end="2007-12-31">
+	<input name="air temperature"  time_step="1 day" url="file://airtemp.nc" plugin="NCgridRegular.iplugin" method="NCgridRegular">
+		<!--air temperature input-->
+		<variable name="air temperature" standard_name="airtmp"/>
+	</input>
+	<input name="precipitation_input" time_step="inherit" url="file://precip.nc" plugin="NCgridRegular.iplugin" method="NCgridRegular">
+		<!--Precipitation input-->
+		<variable name="precipitation" standard_name="precip"/>
+	</input>
+	<input name="reanalysis_input" time_step="inherit" url="file://ncep.nc"      plugin="NCgrid.iplugin" method="NCgrid">
+		<!--NCEP Reanalysis input-->
+		<variable name="vapor pressure" standard_name="vapor_pressure"/>
+		<variable name="wind speed"     standard_name="wind_speed"/>
+	</input>
+	<input name="landcover_input" time_step="inherit" url="file://landcover.nc"      plugin="NCgrid.iplugin" method="NCgrid">
+		<!--Landcover input-->
+		<variable name="land_cover"     standard_name="land_cover"/>
+	</input>
+	<aggregate name="landcover_percent" layout="precipitation_input" component="landcover_input" variable="landcover">
+		<!--Characteristic land cover types-->
+		<category name="decidious forest" values="1,5,7"/>
+		<category name="conifer forest"   values="10-12"/>
+		<category name="evergreen forest" values="8"/>
+		<category name="tall grass"       values="9"/>
+		<category name="short grass"      values="18"/>
+		<category name="savannah"         values="14,16"/>
+		<category name="shrubland"        values="17"/>
+		<category name="tundra"           values="19"/>
+		<category name="water"            values="20"/>
+		<category name="other"            values="unused"/>
+	</aggregate>
+	<input name="land_type" time_step="inherit" url="file://landtype.nc" plugin="NCgridRegular.iplugin" method="NCgridRegular">
+		<!--Land alterations-->
+		<variable name="natural"    standard_name="natural"/>
+		<variable name="wetland"    standard_name="wetland"/>
+		<variable name="cultivated" standard_name="cultivated"/>
+		<variable name="impervious" standard_name="impervious"/>
+	</input>
+	<input name="wetland" time_step="inherit" url="file://wetland.nc"    plugin="NCgridRegular.iplugin" method="NCgridRegular">
+		<!--Wetland types-->
+		<variable name="decidious forest" standard_name="decidious"/>
+		<variable name="evergreen forest" standard_name="evergreen"/>
+		<variable name="savannah"         standard_name="savannah"/>
+		<variable name="shrubland"        standard_name="shrubland"/>
+	</input>
+	<input name="cropland" time_step="inherit" url="file://cropland.nc"  plugin="NCgridRegular.iplugin" method="NCgridRegular">
+		<!--Cropland types-->
+		<variable name="barley" standard_name="barley"/>
+		<variable name="cassava" standard_name="cassava"/>
+		<variable name="cotton" standard_name="cotton"/>
+		<variable name="groundnuts" standard_name="grounduts"/>
+		<variable name="maize" standard_name="maize"/>
+		<variable name="millet" standard_name="millet"/>
+		<variable name="oilpalm" standard_name="oilpalm"/>
+		<variable name="others" standard_name="others"/>
+		<variable name="potato" standard_name="potato"/>
+		<variable name="pulses" standard_name="pulses"/>
+		<variable name="rapeseed" standard_name="rapeseed"/>
+		<variable name="rice" standard_name="rice"/>
+		<variable name="rye" standard_name="rye"/>
+		<variable name="sorghum" standard_name="sorghum"/>
+		<variable name="soybean" standard_name="soybean"/>
+		<variable name="sugarbeet" standard_name="sugarbeet"/>
+		<variable name="sugarcane" standard_name="sugarcane"/>
+		<variable name="sunflower" standard_name="sunflower"/>
+		<variable name="wheat" standard_name="wheat"/>
+	</input>
+	<input name="river-network" time_step="inherit" url="file://stn06.nc"   plugin="NCgridRegular.iplugin" method="NCgridRegular">
+		<!--River network-->
+		<variable name="mean depth" standard_name="mdepth"/>
+		<variable name="mean width" standard_name="mwidth"/>
+	</input>
+	<input name="reservoirs" time_step="inherit" url="file://reservoirs.nc" plugin="NCgridRegular.iplugin" method="NCgridRegular">
+		<!--Reservoirs-->
+		<variable name="capacity" standard_name="maxcapacity"/>
+		<variable name="height"   standard_name="crestheight"/>
+	</input>
+	<container name="land-surface" layout="land_type" time_step="1 day" states="landsurf_state.nc">
+		<!--Land-surface component-->
+		<interface name="air temperature" relation="parent" component="air temperature"     variable="air temperature" default="nodata"/>
+		<interface name="precipitation" relation="parent" component="precipitation_input" variable="precipitation"   default="nodata"/>
+		<interface name="natural" relation="parent" component="land_type"           variable="natural"            default="0.0"/>
+		<interface name="wetland" relation="parent" component="land_type"           variable="wetland"         default="0.0"/>
+		<region name="wild_region" condition="[a] &gt; 0.0">
+			<alias name="wetland" type="variable" alias="a"/>
+		</region>
+		<region name="wetland_region" condition="[a] &gt; 0.0">
+			<alias name="wetland" type="variable" alias="a"/>
+		</region>
+		<container name="wetland" layout="wetland_region" time_step="inherit" states="wetland.nc">
+		</container>
+		<initial name="soil moisture" unit="mm" initial_value="0.0"/>
+		<process name="potential evapotranspiration" plugin="wbm.mplugin" method="Hamon">
+			<alias name="air temperature" alias="airtemp" type="variable"/>
+			<alias name="vapor pressure"  alias="vpress"  type="variable"/>
+			<parameter name="coefficient" value="25.0"/>
+		</process>
+		<derivative name="preciptiation_dx"  direction="x" difference="centered" variable="precipitation"/>
+		<equation name="akarmi" unit="m^3/s" equation="([a] + [b]) * [d]" >
+			<alias name="precip" alias="a" type="variable"/>
+			<alias name="airtemp" alias="b" type="variable"/>
+		</equation>
+		<output name="water budget" path="water_budget.nc">
+			<variable name="wetland" standard_name="wetland"/>
+		</output>
+	</container>
+	<container name="rivers" layout="river-network" time_step="6 hours" states="rivers_state.nc">
+		<!--River component-->
+		<interface name="precipitation" relation="parent" component="precipitation_input" variable="precipitation" default="nodata"/>
+		<route name="discharge" unit="m^3/s"/>
+	</container>
+	<container name="reservoirs" layout="reservoirs" time_step="5 days" states="reservoir_states.nc">
+		<!--Reservoirs component-->
+	</container>
+</model>

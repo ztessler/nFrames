@@ -1,0 +1,103 @@
+<!-- DTD for Land surface model definition file -->
+
+<!ELEMENT model         (aggregate|container|input|parameter|region)+>
+<!ATTLIST model         name CDATA #REQUIRED
+                     version CDATA #REQUIRED
+                       begin CDATA #REQUIRED
+                         end CDATA #REQUIRED>
+
+<!ELEMENT aggregate      (category|mean|minimum|maximum|stdev)+>
+<!ATTLIST aggregate     name CDATA #REQUIRED
+                      layout CDATA #REQUIRED
+                   component CDATA #REQUIRED
+                    variable CDATA #REQUIRED>
+
+<!ELEMENT container     (aggregate|container|derivative|equation|initial|interface|output|parameter|probe|process|region|route)+>
+<!ATTLIST container     name CDATA #REQUIRED
+                      layout CDATA #REQUIRED
+                   time_step CDATA #REQUIRED
+                      states CDATA #REQUIRED>
+
+<!ELEMENT equation      (alias|parameter)*>
+<!ATTLIST equation      name CDATA #REQUIRED
+                    equation CDATA #REQUIRED
+                        unit CDATA #IMPLIED>
+
+<!ELEMENT input         (variable)+>
+<!ATTLIST input         name CDATA #REQUIRED
+                   time_step CDATA #REQUIRED
+                         url CDATA #REQUIRED
+                      plugin CDATA #REQUIRED
+                      method CDATA #REQUIRED>
+
+<!ELEMENT output        (variable)+>
+<!ATTLIST output        name CDATA #REQUIRED
+                        path CDATA #REQUIRED>
+   
+<!ELEMENT process       (alias|parameter)*>
+<!ATTLIST process       name CDATA #REQUIRED
+                      plugin CDATA #REQUIRED
+                      method CDATA #REQUIRED>
+
+<!ELEMENT region        (alias)>
+<!ATTLIST region        name CDATA #REQUIRED
+                   condition CDATA #REQUIRED>
+  
+<!ELEMENT extent        (#EMPTY)>
+<!ATTLIST extent    direction (x|y|z) #REQUIRED
+                      minimum CDATA #REQUIRED
+                      maximum CDATA #REQUIRED>
+
+<!ELEMENT dimension     (#EMPTY)>
+<!ATTLIST dimension direction (x|y|z) #REQUIRED
+                         size CDATA #REQUIRED>
+
+<!ELEMENT point         (#EMPTY)>
+<!ATTLIST point         name CDATA #REQUIRED
+                       xcoord CDATA #REQUIRED
+                       ycoord CDATA #REQUIRED>
+
+<!ELEMENT interface     (#EMPTY)>
+<!ATTLIST interface     name CDATA #REQUIRED
+                        relation (root|parent|own) #REQUIRED
+                   component CDATA #REQUIRED
+                    variable CDATA #REQUIRED
+                     default CDATA #REQUIRED>
+
+<!ELEMENT alias         (#EMPTY)>
+<!ATTLIST alias         name CDATA #REQUIRED
+                       alias CDATA #REQUIRED
+                        type (variable|parameter) #IMPLIED>
+
+<!ELEMENT category      (#EMPTY)>
+<!ATTLIST category      name CDATA #REQUIRED
+                      values CDATA #REQUIRED>
+
+<!ELEMENT derivative    (#EMPTY)>
+<!ATTLIST derivative    name CDATA #REQUIRED
+                    variable CDATA #REQUIRED
+                   direction (x|y|z) #REQUIRED
+                  difference (centered|backward|forward) #IMPLIED>
+
+<!ELEMENT initial       (#EMPTY)>
+<!ATTLIST initial       name CDATA #REQUIRED
+                        unit CDATA #REQUIRED
+               initial_value CDATA #IMPLIED>
+
+<!ELEMENT parameter     (#EMPTY)>
+<!ATTLIST parameter     name CDATA #REQUIRED
+                       value CDATA #REQUIRED >
+
+<!ELEMENT probe         (#EMPTY)>
+<!ATTLIST probe         name CDATA #REQUIRED
+                        path CDATA #REQUIRED
+                      xcoord CDATA #REQUIRED
+                      ycoord CDATA #REQUIRED>
+   
+<!ELEMENT route        (#EMPTY)>
+<!ATTLIST route         name CDATA #REQUIRED
+                        unit CDATA #REQUIRED>
+   
+<!ELEMENT variable      (#EMPTY)>
+<!ATTLIST variable      name CDATA #REQUIRED
+               standard_name CDATA #REQUIRED>
