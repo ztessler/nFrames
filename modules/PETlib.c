@@ -13,12 +13,12 @@ typedef struct HamonData_s {
 } HamonData_t;
 
 void Initialize_Hamon (NFcontext_p context) {
-	static struct NFparameter_s parameters [] = {{ "param0",  0.5, 0.2,  0.8,       NFscalar(HamonData_t,Parameter0)},
-	                                               { "param1", 10.0, 5.0, 20.0,       NFscalar(HamonData_t,Parameter1)}};
+	static struct NFparameter_s parameters [] = {{ "param0",  0.5, 0.2,  0.8,     NFscalar(HamonData_t,Parameter0)},
+	                                             { "param1", 10.0, 5.0, 20.0,     NFscalar(HamonData_t,Parameter1)}};
 	static struct NFvariable_s  variables  [] = {{ "airtemp", NFinput,  "degC",   NFscalar(HamonData_t,Airtemp),       NFmissingVal},
-			                                       { "vpress",  NFinput,  "kPa",    NFscalar(HamonData_t,VaporPressure), NFmissingVal},
-			                                       { "Vector",  NFoutput, "m",      NFvector(HamonData_t,Vector),        NFmissingVal},
-			                                       { "pet",     NFoutput, "mm/day", NFscalar(HamonData_t,PotEvap),       NFmissingVal}};
+			                                     { "vpress",  NFinput,  "kPa",    NFscalar(HamonData_t,VaporPressure), NFmissingVal},
+			                                     { "Vector",  NFoutput, "m",      NFvector(HamonData_t,Vector),        NFmissingVal},
+			                                     { "pet",     NFoutput, "mm/day", NFscalar(HamonData_t,PotEvap),       NFmissingVal}};
 	context->TimeStepUnit = "day";
 	context->MinTimeStep  = context->MaxTimeStep  = 1;
 	context->ParameterNum = NFparameterNum (parameters);
@@ -104,7 +104,7 @@ float SRadNETLong (float i0hDay,float airT,float solRad,float ea) {
    novern = i0hDay > 0.0 ? (solRad / i0hDay - MDConstC1) / MDConstC2 : (1.0 - MDConstC1) / MDConstC2;
    if (novern > 1.0) novern = 1.0;
    if (novern < 0.0) novern = 0.0;
-   cldcor = MDConstC3 + (1.0 - MDConstC3) * novern; 
+   cldcor = MDConstC3 + (1.0 - MDConstC3) * novern;
    return ((effem - 1.0) * cldcor * MDConstSIGMA * pow (airT + 273.15,4.0));
 }
 
@@ -159,7 +159,7 @@ void Execute_PsTaylor  (void *userData) {
 	es     = VPressSat  (data->AirTemp);
 	delta  = VPressDelta (data->AirTemp);
 
-	dd     = es - data->VaporP; 
+	dd     = es - data->VaporP;
 	le     = data->PTalpha * delta * aa / (delta + data->PSgamma);
 
 	data->Pet = data->EtoM * data->IGrate * le;

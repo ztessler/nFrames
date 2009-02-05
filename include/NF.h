@@ -39,25 +39,25 @@ typedef enum { NFinput, NFoutput, NFmodified } NFrole;
 
 typedef struct NFvariable_s
 {
-	char        *Name;
+	char      *Name;
 	NFrole     Role;
-	char        *UnitString;
-	size_t       ElementNum;
+	char      *UnitString;
+	size_t     ElementNum;
 	NFvarType  VarType;
-	size_t       Address;
-	double       Default;
+	size_t     Address;
+	double     Default;
 } NFvariable_t, *NFvariable_p;
 
 typedef struct NFcontext_s {
-	const char      *TimeStepUnit;
-	size_t           MinTimeStep;
-	size_t           MaxTimeStep;
-	size_t           ParameterNum;
+	const char    *TimeStepUnit;
+	size_t         MinTimeStep;
+	size_t         MaxTimeStep;
+	size_t         ParameterNum;
 	NFparameter_t *Parameters;
-	size_t           VariableNum;
+	size_t         VariableNum;
 	NFvariable_t  *Variables;
-	size_t           UserDataSize;
-	void            *UserData;
+	size_t         UserDataSize;
+	void          *UserData;
 } NFcontext_t, *NFcontext_p;
 
 NFcontext_p NFcontextCreate ();

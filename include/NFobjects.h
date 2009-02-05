@@ -33,7 +33,7 @@ extern "C" {
 #define NFobjCategoryStr      "category"
 #define NFobjOutputStr        "output"
 #define NFobjPluginStr        "plugin"
-#define NFobjPointStr         "point"      
+#define NFobjPointStr         "point"
 
 #define NFdimensionStr        "dimension"
 #define NFextentStr           "extent"
@@ -81,7 +81,7 @@ extern "C" {
 #define NFfuncFinalizeStr     "Finalize"
 #define NFfuncInitializeStr   "Initialize"
 #define NFfuncOpenStr         "Open"
-	
+
 typedef enum { NFcompAggregate,
                NFcompContainer,
                NFcompInput,
@@ -120,15 +120,15 @@ CMreturn   NFlistRemoveItem (NFlist_p, void *);
 *****************************************************************************************************************/
 typedef struct NFobject_s {
 	NFobjType   Type;
-	char         *Name;
-	char         *Notes;
+	char       *Name;
+	char       *Notes;
 	struct NFobject_s *Parent;
 } NFobject_t, *NFobject_p;
 
 NFobject_p  NFobjectCreate (const char *, NFobjType);
-void          NFobjectFree  (NFobject_p);
-void          NFobjectPrint (NFobject_p);
-const char   *NFobjTypeName (NFobjType);
+void        NFobjectFree  (NFobject_p);
+void        NFobjectPrint (NFobject_p);
+const char *NFobjTypeName (NFobjType);
 NFobjType   NFobjTypeCode (const char *);
 NFobject_p  NFobjectRoot  (NFobject_p);
 
@@ -144,8 +144,8 @@ typedef struct NFobjList_s {
 } NFobjList_t, *NFobjList_p;
 
 NFobjList_p NFobjListCreate         (NFobject_p);
-void          NFobjListFree           (NFobjList_p);
-CMreturn      NFobjListAddItem        (NFobjList_p, NFobject_p);
+void        NFobjListFree           (NFobjList_p);
+CMreturn    NFobjListAddItem        (NFobjList_p, NFobject_p);
 NFobject_p  NFobjListFindItemByID   (NFobjList_p, size_t);
 NFobject_p  NFobjListFindItemByName (NFobjList_p, const char *);
 
@@ -154,8 +154,8 @@ NFobject_p  NFobjListFindItemByName (NFobjList_p, const char *);
 *****************************************************************************************************************/
 typedef struct NFcomponent_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFobjList_p      Variables;
@@ -169,12 +169,12 @@ typedef struct NFcomponent_s {
 *****************************************************************************************************************/
 typedef struct NFnumParameter_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
-	double             Value;
-	double             Minimum, Maximum;
+	double           Value;
+	double           Minimum, Maximum;
 } NFnumParameter_t, *NFnumParameter_p;
 
 /****************************************************************************************************************
@@ -182,17 +182,17 @@ typedef struct NFnumParameter_s {
 *****************************************************************************************************************/
 typedef struct NFnumVariable_s {
 	NFobjType       Type;
-	char              *Name;
-	char              *Notes;
-	NFobject_p       Parent;
+	char           *Name;
+	char           *Notes;
+	NFobject_p      Parent;
 
-	bool               Route;
-	char              *UnitString;
-	char              *StandardName;
-	size_t             XMLline;
-	double             InitialValue;
-	NFvarHandle      VarHandle;
-	NFvarType        VarType;
+	bool            Route;
+	char           *UnitString;
+	char           *StandardName;
+	size_t          XMLline;
+	double          InitialValue;
+	NFvarHandle     VarHandle;
+	NFvarType       VarType;
 	union {
 		void   *Void;
 		char   *Byte;
@@ -208,11 +208,11 @@ typedef struct NFnumVariable_s {
 typedef enum { NFaliasVariable, NFaliasParameter } NFaliasType;
 typedef struct NFobjAlias_s {
 	NFobjType       Type;
-	char             *Name;
-	char             *Notes;
+	char           *Name;
+	char           *Notes;
 	NFobject_p      Parent;
 
-	char             *Alias;
+	char           *Alias;
 	NFaliasType     AliasType;
 } NFobjAlias_t, *NFobjAlias_p;
 
@@ -221,11 +221,11 @@ typedef struct NFobjAlias_s {
 *****************************************************************************************************************/
 typedef struct NFobjCategory_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
-	char              *Values;
+	char            *Values;
 	NFnumVariable_p  Variable;
 } NFobjCategory_t, *NFobjCategory_p;
 
@@ -234,11 +234,11 @@ typedef struct NFobjCategory_s {
 *****************************************************************************************************************/
 typedef struct NFobjOutput_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
-	char              *Path;
+	char            *Path;
 	NFobjList_p      Variables;
 } NFobjOutput_t, *NFobjOutput_p;
 
@@ -247,11 +247,11 @@ typedef struct NFobjOutput_s {
 *****************************************************************************************************************/
 typedef struct NFobjPlugin_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
-	void              *Handle;
+	void            *Handle;
 } NFobjPlugin_t, *NFobjPlugin_p;
 
 NFobjPlugin_p NFpluginGet (NFobjList_p, const char *);
@@ -261,8 +261,8 @@ void *NFpluginFunction (NFobjPlugin_p, const char *, const char *);
 *****************************************************************************************************************/
 typedef struct NFcompAggregate_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFobjList_p      Variables; // owned
@@ -280,8 +280,8 @@ typedef struct NFcompAggregate_s {
 *****************************************************************************************************************/
 typedef struct NFcompContainer_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFobjList_p      Variables; // owned
@@ -293,7 +293,7 @@ typedef struct NFcompContainer_s {
 	NFobjList_p      Parameters;
 	NFobjList_p      Modules;
 	NFobjList_p      Outputs;
-	char              *States;
+	char            *States;
 } NFcompContainer_t, *NFcompContainer_p;
 
 /****************************************************************************************************************
@@ -301,8 +301,8 @@ typedef struct NFcompContainer_s {
 *****************************************************************************************************************/
 typedef struct NFcompInput_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFobjList_p      Variables; // owned
@@ -310,10 +310,10 @@ typedef struct NFcompInput_s {
 	NFio_p           IO;        // owned
 	NFcomponent_p    Layout;
 
-	char              *URL;
+	char            *URL;
 	NFobjPlugin_p    IOplugin;
-	size_t             XMLline;
-	char              *IOmethod;
+	size_t           XMLline;
+	char            *IOmethod;
 } NFcompInput_t, *NFcompInput_p;
 
 /****************************************************************************************************************
@@ -321,8 +321,8 @@ typedef struct NFcompInput_s {
 *****************************************************************************************************************/
 typedef struct NFcompModel_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFobjList_p      Variables; // Unused !!
@@ -335,11 +335,11 @@ typedef struct NFcompModel_s {
 	NFobjList_p      IOPlugins;
 	NFobjList_p      ModPlugins;
 
-	char              *Version;
+	char            *Version;
 	NFtime_p         Begin;
 	NFtime_p         End;
 	NFlist_p         TimeSteps;
-	ut_system         *UtSystem;
+	ut_system       *UtSystem;
 } NFcompModel_t, *NFcompModel_p;
 
 /****************************************************************************************************************
@@ -347,8 +347,8 @@ typedef struct NFcompModel_s {
 *****************************************************************************************************************/
 typedef struct NFcompRegion_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFobjList_p      Variables;
@@ -364,8 +364,8 @@ typedef struct NFcompRegion_s {
 *****************************************************************************************************************/
 typedef struct NFmodDerivative_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFnumVariable_p  Variable;
@@ -379,8 +379,8 @@ typedef struct NFmodDerivative_s {
 *****************************************************************************************************************/
 typedef struct NFmodEquation_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFnumVariable_p  Variable;
@@ -394,8 +394,8 @@ typedef struct NFmodEquation_s {
 *****************************************************************************************************************/
 typedef struct NFmodInterface_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFnumVariable_p  Variable;
@@ -408,8 +408,8 @@ typedef struct NFmodInterface_s {
 *****************************************************************************************************************/
 typedef struct NFmodProcess_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFobjList_p      InputVars;
@@ -427,17 +427,17 @@ typedef struct NFmodProcess_s {
 *****************************************************************************************************************/
 typedef struct NFmodRoute_s {
 	NFobjType        Type;
-	char              *Name;
-	char              *Notes;
+	char            *Name;
+	char            *Notes;
 	NFobject_p       Parent;
 
 	NFnumVariable_p  Variable;
 } NFmodRoute_t, *NFmodRoute_p;
 
 /****************************************************************************************************************
- * Functions 
+ * Functions
 *****************************************************************************************************************/
-const char  *NFparseGetAttribute (const char **, const char *, const char *);
+const char *NFparseGetAttribute (const char **, const char *, const char *);
 NFobject_p NFparseCompAggregateCreate (XML_Parser parser, NFobject_p, const char *, const char **);
 NFobject_p NFparseCompContainerCreate (XML_Parser parser, NFobject_p, const char *, const char **);
 NFobject_p NFparseCompInputCreate     (XML_Parser parser, NFobject_p, const char *, const char **);

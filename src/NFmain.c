@@ -17,7 +17,7 @@ int main (int argc, char *argv[])
 	NFaction execute = NFsilent;
 	NFcompModel_p model = (NFcompModel_p) NULL;
 
-	CMmathEqualValues (0.0,0.0); // TODO This is here to make sure that lsmf.bin includes CMmathEqualValues
+	CMmathEqualValues (0.0,0.0); // TODO This is here to make sure that nFrames.bin includes CMmathEqualValues
 	for (argPos = 1;argPos < argNum;) {
 		if (CMargTest(argv[argPos],"-a","--parse")) {
 			if ((argNum = CMargShiftLeft(argPos,argv,argNum)) <= argPos) {
