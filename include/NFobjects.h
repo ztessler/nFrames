@@ -111,9 +111,9 @@ typedef struct NFlist_s {
 } NFlist_t, *NFlist_p;
 
 NFlist_p NFlistCreate     ();
-void       NFlistFree       (NFlist_p);
-CMreturn   NFlistAddItem    (NFlist_p, void *);
-CMreturn   NFlistRemoveItem (NFlist_p, void *);
+void     NFlistFree       (NFlist_p);
+CMreturn NFlistAddItem    (NFlist_p, void *);
+CMreturn NFlistRemoveItem (NFlist_p, void *);
 
 /****************************************************************************************************************
  * Object
