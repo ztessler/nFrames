@@ -116,6 +116,17 @@ CMreturn NFlistAddItem    (NFlist_p, void *);
 CMreturn NFlistRemoveItem (NFlist_p, void *);
 
 /****************************************************************************************************************
+ * Domain
+*****************************************************************************************************************/
+typedef struct NFdomain_s {
+	size_t Num;
+	NFio_p IO;
+} NFdomain_t, *NFdomain_p;
+
+NFdomain_p NFdomainCreate     ();
+void       NFdomainFree       (NFdomain_p);
+
+/****************************************************************************************************************
  * Object
 *****************************************************************************************************************/
 typedef struct NFobject_s {
@@ -160,8 +171,7 @@ typedef struct NFcomponent_s {
 
 	NFobjList_p      Variables;
 	NFtimeStep_p     TimeStep;
-	NFio_p           IO;
-	struct NFcomponent_s *Layout;
+	NFdomain_p       Domain;
 } NFcompenent_t, *NFcomponent_p;
 
 /****************************************************************************************************************
@@ -267,8 +277,7 @@ typedef struct NFcompAggregate_s {
 
 	NFobjList_p      Variables; // owned
 	NFtimeStep_p     TimeStep;  // borrowed
-	NFio_p           IO;        // borrowed
-	NFcomponent_p    Layout;
+	NFdomain_p       Domain;    // borrowed
 
 	NFobject_p       Component;
 	NFnumVariable_p  Variable;
@@ -286,8 +295,7 @@ typedef struct NFcompContainer_s {
 
 	NFobjList_p      Variables; // owned
 	NFtimeStep_p     TimeStep;  // borrowed or owned
-	NFio_p           IO;        // borrowed
-	NFcomponent_p    Layout;
+	NFdomain_p       Domain;    // borrowed
 
 	NFobjList_p      Components;
 	NFobjList_p      Parameters;
@@ -307,8 +315,7 @@ typedef struct NFcompInput_s {
 
 	NFobjList_p      Variables; // owned
 	NFtimeStep_p     TimeStep;  // owned
-	NFio_p           IO;        // owned
-	NFcomponent_p    Layout;
+	NFdomain_p       Domain;    // owned
 
 	char            *URL;
 	NFobjPlugin_p    IOplugin;
@@ -327,8 +334,7 @@ typedef struct NFcompModel_s {
 
 	NFobjList_p      Variables; // Unused !!
 	NFtimeStep_p     TimeStep;  // owned
-	NFio_p           IO;        // Unused !!
-	NFcomponent_p    Layout;
+	NFdomain_p       Domain;    // Unused !!
 
 	NFobjList_p      Parameters;
 	NFobjList_p      Components;
@@ -339,6 +345,7 @@ typedef struct NFcompModel_s {
 	NFtime_p         Begin;
 	NFtime_p         End;
 	NFlist_p         TimeSteps;
+	NFlist_p         Couplers;
 	ut_system       *UtSystem;
 } NFcompModel_t, *NFcompModel_p;
 
@@ -351,10 +358,9 @@ typedef struct NFcompRegion_s {
 	char            *Notes;
 	NFobject_p       Parent;
 
-	NFobjList_p      Variables;
+	NFobjList_p      Variables; // Owned
 	NFtimeStep_p     TimeStep;  // borrowed
-	NFio_p           IO;        // borrowed
-	NFcomponent_p    Layout;
+	NFdomain_p       Domain;    // borrowed
 
 	NFobjList_p      Aliases;
 } NFcompRegion_t, *NFcompRegion_p;
@@ -390,6 +396,17 @@ typedef struct NFmodEquation_s {
 } NFmodEquation_t, *NFmodEquation_p;
 
 /****************************************************************************************************************
+ * Coupler
+*****************************************************************************************************************/
+typedef struct NFcoupler_s {
+	NFdomain_p SrcDomain, DstDomain;
+
+} NFcoupler_t, *NFcoupler_p;
+
+NFcoupler_p NFcouplerGet  (NFdomain_p, NFdomain_p);
+void        NFcouplerFree (NFcoupler_t *);
+
+/****************************************************************************************************************
  * Interface
 *****************************************************************************************************************/
 typedef struct NFmodInterface_s {
@@ -401,6 +418,7 @@ typedef struct NFmodInterface_s {
 	NFnumVariable_p  Variable;
 	NFnumVariable_p  InputVar;
 	NFcomponent_p    Component;
+	NFcoupler_p      Coupler;
 } NFmodInterface_t, *NFmodInterface_p;
 
 /****************************************************************************************************************
@@ -471,9 +489,9 @@ CMreturn NFparseNumParameterFinalize  (NFobject_p, NFobject_p);
 CMreturn NFparseNumVariableFinalize   (NFobject_p, NFobject_p);
 
 NFcompModel_p NFmodelParse   (FILE *, bool);
-CMreturn        NFmodelResolve (NFcompModel_p, bool);
-CMreturn        NFmodelExecute (NFcompModel_p, bool);
-void            NFmodelReport  (NFcompModel_p);
+CMreturn      NFmodelResolve (NFcompModel_p, bool);
+CMreturn      NFmodelExecute (NFcompModel_p, bool);
+void          NFmodelReport  (NFcompModel_p);
 
 NFtimeStep_p  NFmodelAddTimeStep (NFcompModel_p, NFtimeStep_p);
 

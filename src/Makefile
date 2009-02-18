@@ -19,6 +19,8 @@ OBJS = $(OBJ)/NFmain.o\
        $(OBJ)/NFcompModel.o\
        $(OBJ)/NFcompRegion.o\
        $(OBJ)/NFcontext.o\
+       $(OBJ)/NFcoupler.o\
+       $(OBJ)/NFdomain.o\
        $(OBJ)/NFexecute.o\
        $(OBJ)/NFmisc.o\
        $(OBJ)/NFmodDerivative.o\

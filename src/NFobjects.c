@@ -7,7 +7,7 @@
  * Object type name
 *****************************************************************************************************************/
 const char *NFobjTypeName (NFobjType objType) {
-	
+
 	switch (objType) {
 	case NFcompAggregate: return (NFcompAggregateStr);
 	case NFcompContainer: return (NFcompContainerStr);
@@ -34,7 +34,7 @@ const char *NFobjTypeName (NFobjType objType) {
  * Object type code
 *****************************************************************************************************************/
 NFobjType NFobjTypeCode (const char *typeName) {
-	
+
 	if      (strcmp (typeName,NFcompAggregateStr) == 0) return (NFcompAggregate);
 	else if (strcmp (typeName,NFcompContainerStr) == 0) return (NFcompContainer);
 	else if (strcmp (typeName,NFcompInputStr)     == 0) return (NFcompInput);
@@ -58,7 +58,7 @@ NFobjType NFobjTypeCode (const char *typeName) {
  * Object size
 *****************************************************************************************************************/
 static int _NFobjectSize (NFobjType objType) {
-	
+
 	switch (objType) {
 	case NFcompAggregate: return (sizeof (NFcompAggregate_t));
 	case NFcompContainer: return (sizeof (NFcompContainer_t));
@@ -116,11 +116,10 @@ static CMreturn _NFcompAggregateInit (NFobject_p object) {
 	NFcompAggregate_p component = (NFcompAggregate_p) object;
 
 	component->Variables  = NFobjListCreate (object);
-	component->TimeStep   = (NFtimeStep_p)  NULL;
-	component->IO         = (NFio_p)        NULL;
-	component->Layout     = (NFcomponent_p) NULL;
+	component->TimeStep   = (NFtimeStep_p)    NULL;
+	component->Domain     = (NFdomain_p)      NULL;
 
-	component->Component  = (NFobject_p) NULL;
+	component->Component  = (NFobject_p)      NULL;
 	component->Variable   = (NFnumVariable_p) NULL;
 	component->Categories = NFobjListCreate (object);
  	return (CMsucceeded);
@@ -141,7 +140,7 @@ static void _NFcompAggregatePrint (NFobject_p object) {
 		if (component->TimeStep->Length > 1)
 			CMmsgPrint (CMmsgInfo, "Time Step: %d %ss\n", component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));
 		else
-			CMmsgPrint (CMmsgInfo, "Time Step: %d %s\n",  component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));			
+			CMmsgPrint (CMmsgInfo, "Time Step: %d %s\n",  component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));
 	}
 	if (component->Component    != (NFobject_p)      NULL) CMmsgPrint (CMmsgInfo,"Component: %s\n", component->Component->Name);
 	if (component->Variable     != (NFnumVariable_p) NULL) CMmsgPrint (CMmsgInfo,"Variable: %s\n",  component->Variable->Name);
@@ -165,8 +164,7 @@ static CMreturn _NFcompContainerInit (NFobject_p object) {
 
 	component->Variables  = NFobjListCreate (object);
 	component->TimeStep   = (NFtimeStep_p) NULL;
-	component->IO         = (NFio_p)       NULL;
-	component->Layout     = (NFcomponent_p) NULL;
+	component->Domain     = (NFdomain_p)   NULL;
 
 	component->Parameters = NFobjListCreate (object);
 	component->Components = NFobjListCreate (object);
@@ -197,7 +195,7 @@ static void _NFcompContainerPrint (NFobject_p object) {
 		if (component->TimeStep->Length > 1)
 			CMmsgPrint (CMmsgInfo, "Time Step: %d %ss\n", component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));
 		else
-			CMmsgPrint (CMmsgInfo, "Time Step: %d %s\n", component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));			
+			CMmsgPrint (CMmsgInfo, "Time Step: %d %s\n", component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));
 	}
 	if (component->States   != (char *) NULL) CMmsgPrint (CMmsgInfo, "States: %s\n",    component->States);
 
@@ -236,8 +234,7 @@ static CMreturn _NFcompInputInit (NFobject_p object) {
 
 	component->Variables = NFobjListCreate (object);
 	component->TimeStep  = NFtimeStepCreate ();
-	component->IO        = (NFio_p)        NULL;
-	component->Layout    = (NFcomponent_p) component;
+	component->Domain    = NFdomainCreate  ();
 
 	component->URL       = (char *) NULL;
 	component->IOplugin  = (NFobjPlugin_p) NULL;
@@ -249,7 +246,7 @@ static CMreturn _NFcompInputInit (NFobject_p object) {
 static void _NFcompInputFree (NFobject_p object) {
 	NFcompInput_p component = (NFcompInput_p) object;
 
-	if (component->IO       != (NFio_p)       NULL) NFioFree   (component->IO);
+	if (component->Domain   != (NFdomain_p)       NULL) NFdomainFree   (component->Domain);
 	NFobjListFree (component->Variables);
 	if (component->URL      != (char *) NULL) free (component->URL);
 	if (component->IOmethod != (char *) NULL) free (component->IOmethod);
@@ -264,7 +261,7 @@ static void _NFcompInputPrint (NFobject_p object) {
 		if (component->TimeStep->Length > 1)
 			CMmsgPrint (CMmsgInfo, "Time Step: %d %ss\n", component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));
 		else
-			CMmsgPrint (CMmsgInfo, "Time Step: %d %s\n", component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));			
+			CMmsgPrint (CMmsgInfo, "Time Step: %d %s\n", component->TimeStep->Length,NFtimeUnitString (component->TimeStep->Unit));
 	}
 	if (component->URL != (char *) NULL) CMmsgPrint (CMmsgInfo, "URL: %s\n", component->URL);
 	CMmsgPrint (CMmsgInfo, "Variables Begin\n");
@@ -285,15 +282,15 @@ static CMreturn _NFcompModelInit (NFobject_p object) {
 	model->Begin      = NFtimeCreate ();
 	model->End        = NFtimeCreate ();
 	model->TimeStep   = NFtimeStepCreate ();
-	model->IO         = (NFio_p) NULL;
-	model->Layout     = (NFcomponent_p) NULL;
-	
+	model->Domain     = (NFdomain_p) NULL;
+
 	model->Parameters = NFobjListCreate (object);
 	model->Components = NFobjListCreate (object);
 	model->IOPlugins  = NFobjListCreate (object);
 	model->ModPlugins = NFobjListCreate (object);
 	model->UtSystem   = ut_read_xml ((char *) NULL);
 	model->TimeSteps  = NFlistCreate ();
+	model->Couplers   = NFlistCreate ();
 
 	return (CMsucceeded);
 }
@@ -314,6 +311,8 @@ static void _NFcompModelFree (NFobject_p object) {
 //	if (model->UtSystem != (ut_system *) NULL) ut_free_system (model->UtSystem);
 	for (i = 0;i < model->TimeSteps->Num;++i) NFtimeStepFree ((NFtimeStep_p) (model->TimeSteps->List [i]));
 	NFlistFree (model->TimeSteps);
+	for (i = 0;i < model->Couplers->Num; ++i) NFcouplerFree  ((NFcoupler_p)  (model->Couplers->List [i]));
+	NFlistFree (model->Couplers);
 }
 
 /****************************************************************************************************************/
@@ -370,7 +369,7 @@ static CMreturn _NFcompRegionInit (NFobject_p object) {
 
 	component->Variables = NFobjListCreate (object);
 	component->TimeStep  = (NFtimeStep_p) NULL;
-	component->IO        = (NFio_p)       NULL;
+	component->Domain    = (NFdomain_p)   NULL;
 	component->Aliases   = NFobjListCreate (object);
 	return (CMsucceeded);
 }
@@ -452,7 +451,7 @@ static void _NFmodDerivativePrint (NFobject_p object) {
 }
 
 /****************************************************************************************************************
- * Equation module 
+ * Equation module
 *****************************************************************************************************************/
 static CMreturn _NFmodEquationInit (NFobject_p object)  {
 	NFmodEquation_p module = (NFmodEquation_p) object;
@@ -499,6 +498,7 @@ static CMreturn _NFmodInterfaceInit (NFobject_p object) {
 	module->Variable  = (NFnumVariable_p) NULL;
 	module->InputVar  = (NFnumVariable_p) NULL;
 	module->Component = (NFcomponent_p)   NULL;
+	module->Coupler   = (NFcoupler_p)     NULL;
 	return (CMsucceeded);
 }
 /****************************************************************************************************************/
@@ -511,7 +511,7 @@ static void _NFmodInterfaceFree (NFobject_p object) {
 /****************************************************************************************************************/
 static void _NFmodInterfacePrint (NFobject_p object) {
 	NFmodInterface_p module = (NFmodInterface_p) object;
-	
+
 	if (module->Variable != (NFnumVariable_p) NULL) {
 		CMmsgPrint (CMmsgInfo, "Output variable Begin\n");
 		CMmsgIndent (CMmsgInfo, true);
@@ -529,7 +529,7 @@ static void _NFmodInterfacePrint (NFobject_p object) {
 }
 
 /****************************************************************************************************************
- * Process module 
+ * Process module
 *****************************************************************************************************************/
 static CMreturn _NFmodProcessInit (NFobject_p object)  {
 	NFmodProcess_p module = (NFmodProcess_p) object;
@@ -570,7 +570,7 @@ static void _NFmodProcessPrint (NFobject_p object) {
 }
 
 /****************************************************************************************************************
- * Route module 
+ * Route module
 *****************************************************************************************************************/
 static CMreturn _NFmodRouteInit (NFobject_p object)  {
 	NFmodRoute_p module = (NFmodRoute_p) object;
@@ -623,7 +623,7 @@ static void _NFnumParameterPrint (NFobject_p object) {
 	NFnumParameter_p parameter = (NFnumParameter_p) object;
 
 	CMmsgIndent (CMmsgInfo, true);
-	CMmsgPrint  (CMmsgInfo, "Value = %f\n",parameter->Value);	
+	CMmsgPrint  (CMmsgInfo, "Value = %f\n",parameter->Value);
 	CMmsgIndent (CMmsgInfo, false);
 }
 
@@ -750,7 +750,7 @@ static CMreturn _NFobjPluginInit (NFobject_p object) {
 
 /****************************************************************************************************************/
 static void _NFobjPluginFree (NFobject_p object) {
-	
+
 	if (((NFobjPlugin_p) object)->Handle != (void *) NULL) dlclose (((NFobjPlugin_p) object)->Handle);
 }
 

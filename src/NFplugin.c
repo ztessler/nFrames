@@ -12,7 +12,7 @@ NFobjPlugin_p NFpluginGet (NFobjList_p pluginList, const char *name) {
 			CMmsgPrint (CMmsgAppError, "Plugin creation error in %s:%d\n",__FILE__,__LINE__);
 			goto Abort;
 	    }
-	    if ((env = getenv ("NFRAMES_PLUGIN_PATH")) != (char *) NULL) {
+	    if ((env = getenv ("NF_PLUGIN_PATH")) != (char *) NULL) {
 	    	env  = CMstrDuplicate (env);
 	    	eLen = strlen (env);
 	    }

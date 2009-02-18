@@ -20,7 +20,7 @@ NFobject_p NFparseCompContainerCreate (XML_Parser parser, NFobject_p parent,cons
 	attrib = NFparseGetAttribute (attr, NFcompLayoutStr, NFkeyInheritStr);
 	if (strcmp (attrib,NFkeyInheritStr) == 0) {
 		if (parent->Type == NFcompContainer)
-			component->Layout = (NFcomponent_p) parent;
+			component->Domain = ((NFcomponent_p) parent)->Domain;
 		else {
 			CMmsgPrint (CMmsgUsrError, "Container [%s] in model can't inherit layout in line %d!\n", name, XML_GetCurrentLineNumber (parser));
 			goto Abort;
@@ -38,7 +38,7 @@ NFobject_p NFparseCompContainerCreate (XML_Parser parser, NFobject_p parent,cons
 			CMmsgPrint (CMmsgUsrError, "Invalid container [%s] layout [%s] in line %d.\n",name, attrib, XML_GetCurrentLineNumber (parser));
 			goto Abort;
 		}
-		component->Layout = sibling;
+		component->Domain = sibling->Domain;
 	}
 	model = (NFcompModel_p) NFobjectRoot (parent);
 	attrib = NFparseGetAttribute (attr, NFattrTimeStepStr, "inherit");

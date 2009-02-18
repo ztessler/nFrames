@@ -5,7 +5,7 @@ NFobject_p NFparseModInterfaceCreate (XML_Parser parser,NFobject_p parent,const 
 	const char *attrib;
 	NFmodInterface_p module   = (NFmodInterface_p) NULL;
 	NFnumVariable_p  inputVar;
-	NFobject_p      component;
+	NFobject_p       component;
 	NFobjList_p list;
 
 	if ((parent->Type != NFcompContainer) || (parent->Parent == (NFobject_p) NULL))  {
@@ -54,7 +54,7 @@ NFobject_p NFparseModInterfaceCreate (XML_Parser parser,NFobject_p parent,const 
 	case NFcompContainer: inputVar = (NFnumVariable_p) NFobjListFindItemByName (((NFcompContainer_p) component)->Variables,attrib); break;
 	default:
 		CMmsgPrint (CMmsgAppError, "This shouldn't have happened in %s%d.\n",__FILE__,__LINE__);
-		goto Abort;		
+		goto Abort;
 	}
 	if (inputVar == (NFnumVariable_p) NULL) {
 		CMmsgPrint (CMmsgUsrError, "Missing interface [%s] variable [%s] in line %d!\n",name, attrib, XML_GetCurrentLineNumber (parser));
@@ -66,7 +66,7 @@ NFobject_p NFparseModInterfaceCreate (XML_Parser parser,NFobject_p parent,const 
 	}
 	if ((module->Variable = (NFnumVariable_p) NFobjectCreate (name,NFnumVariable))  == (NFnumVariable_p) NULL) {
 		CMmsgPrint (CMmsgAppError, "Derivative variable creation error in %s:%d.\n",__FILE__,__LINE__);
-		goto Abort;		
+		goto Abort;
 	}
 	module->Variable->Parent  = (NFobject_p) module;
 	module->Variable->StandardName = CMstrDuplicate (inputVar->StandardName);
@@ -86,6 +86,7 @@ Abort:
 }
 
 CMreturn NFparseModInterfaceFinalize (NFobject_p parent, NFobject_p object) {
+	NFmodInterface_p interface = (NFmodInterface_p) object;
 
 	if ((object->Type != NFmodInterface) || (parent->Type != NFcompContainer)) {
 		CMmsgPrint (CMmsgAppError, "Wrong object in %s:%d\n",__FILE__,__LINE__);
@@ -96,7 +97,11 @@ CMreturn NFparseModInterfaceFinalize (NFobject_p parent, NFobject_p object) {
 		goto Abort;
 	}
 	if (NFobjListAddItem (((NFcompContainer_p) parent)->Variables, (NFobject_p) ((NFmodInterface_p) object)->Variable) != CMsucceeded) {
-			CMmsgPrint (CMmsgAppError, "Error adding variable to container in %s:%d\n",__FILE__,__LINE__);
+		CMmsgPrint (CMmsgAppError, "Error adding variable to container in %s:%d\n",__FILE__,__LINE__);
+		goto Abort;
+	}
+	if ((interface->Coupler = NFcouplerGet (interface->Component, interface->Parent)) == (NFcoupler_p *) NULL) {
+		CMmsgPrint (CMmsgAppError, "Interface error in %s:%d\n", __FILE__,__LINE__);
 		goto Abort;
 	}
 	return (CMsucceeded);

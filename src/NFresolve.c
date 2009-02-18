@@ -7,11 +7,11 @@ static CMreturn _NFresolveVariable (NFobject_p object, bool report) {
 	NFnumVariable_p variable = (NFnumVariable_p) object;
 
 	if (parent->Type == NFcompInput) {
-		if ((variable->VarHandle = NFioVariableHandle (((NFcompInput_p) parent)->IO, variable->StandardName)) == (NFvarHandle) NULL) {
+		if ((variable->VarHandle = NFioVariableHandle (((NFcompInput_p) parent)->Domain->IO, variable->StandardName)) == (NFvarHandle) NULL) {
 			CMmsgPrint (CMmsgUsrError, "Missing input variable in line %d!\n", variable->XMLline);
 			goto Abort;
 		}
-		if ((variable->VarType   = NFioVariableType   (((NFcompInput_p) parent)->IO, variable->VarHandle))    == NFvarTypeVoid) {
+		if ((variable->VarType   = NFioVariableType   (((NFcompInput_p) parent)->Domain->IO, variable->VarHandle))    == NFvarTypeVoid) {
 			CMmsgPrint (CMmsgAppError, "Variable type error in %s:%d!\n",__FILE__,__LINE__);
 			goto Abort;
 		}
@@ -19,7 +19,7 @@ static CMreturn _NFresolveVariable (NFobject_p object, bool report) {
 	else variable->VarType = NFvarTypeFloat;
 
 	if (report) CMmsgPrint (CMmsgInfo, "Variable[%s] type %s\n",variable->StandardName,NFvarTypeString (variable->VarType));
-	if ((variable->Data.Void = malloc (((NFcompInput_p) parent)->IO->ItemNum * variable->VarType)) == (void *) NULL) {
+	if ((variable->Data.Void = malloc (((NFcompInput_p) parent)->Domain->IO->ItemNum * variable->VarType)) == (void *) NULL) {
 		CMmsgPrint (CMmsgSysError, "Memory allocation error in %s:%d!\n",__FILE__,__LINE__);
 		goto Abort;
 	}
@@ -41,20 +41,20 @@ static CMreturn _NFresolveInput (NFobject_p object, bool report) {
 		goto Abort;
 	}
 
-	if ((component->IO = ioOpen (component->URL,model->Begin,model->End, model->UtSystem)) == (NFio_p) NULL) {
+	if ((component->Domain->IO = ioOpen (component->URL,model->Begin,model->End, model->UtSystem)) == (NFio_p) NULL) {
 		CMmsgPrint (CMmsgUsrError, "Input pluging opening error in line %d!\n",component->XMLline);
 		goto Abort;
 	}
 	if (component->TimeStep == (NFtimeStep_p) NULL) {
-		if (component->IO->TimeLine->Regular == false) {
+		if (component->Domain->IO->TimeLine->Regular == false) {
 			CMmsgPrint (CMmsgUsrError, "Irrigular input time step cannot be inherited in line %d!\n",component->XMLline);
 			goto Abort;
 		}
-		else component->TimeStep = component->IO->TimeLine->TimeStep;
+		else component->TimeStep = component->Domain->IO->TimeLine->TimeStep;
 	}
 	for (i = 0;i < component->Variables->Num; ++i) {
 		variable = (NFnumVariable_p) component->Variables->List [i];
-		if ((variable->VarHandle = NFioVariableHandle (component->IO,variable->StandardName)) == (NFvarHandle) NULL) {
+		if ((variable->VarHandle = NFioVariableHandle (component->Domain->IO,variable->StandardName)) == (NFvarHandle) NULL) {
 			CMmsgPrint (CMmsgAppError, "Variable [%s] loading error in line %d!\n", variable->StandardName, component->XMLline);
 			goto Abort;
 		}
@@ -67,14 +67,14 @@ Abort:
 static CMreturn _NFresolveAggregate (NFobject_p object, bool report) {
 	NFcompAggregate_t *component = (NFcompAggregate_t *) object;
 
-	component->IO = component->Layout->IO;
+	component = component; // TODO dummy placeholder
 	return (CMsucceeded);
 //Abort:
 //	return (CMfailed);
 }
 
 static CMreturn _NFresolveRegion    (NFobject_p object, bool repor) {
-	
+
 	return (CMsucceeded);
 }
 
@@ -82,8 +82,6 @@ static CMreturn _NFresolveContainer (NFobject_p object, bool report) {
 	size_t i;
 	NFcompContainer_p container = (NFcompContainer_p) object;
 	NFobject_p variable;
-
-	container->IO = container->Layout->IO;
 
 	for (i = 0;i < container->Variables->Num; ++i) {
 		if ((variable = container->Variables->List [i]) == (NFobject_p) NULL) {
