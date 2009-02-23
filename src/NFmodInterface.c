@@ -68,6 +68,7 @@ NFobject_p NFparseModInterfaceCreate (XML_Parser parser,NFobject_p parent,const 
 		CMmsgPrint (CMmsgAppError, "Derivative variable creation error in %s:%d.\n",__FILE__,__LINE__);
 		goto Abort;
 	}
+	module->Component = (NFcomponent_p) component;
 	module->Variable->Parent  = (NFobject_p) module;
 	module->Variable->StandardName = CMstrDuplicate (inputVar->StandardName);
 	module->Variable->UnitString   = CMstrDuplicate (inputVar->UnitString);
@@ -100,7 +101,7 @@ CMreturn NFparseModInterfaceFinalize (NFobject_p parent, NFobject_p object) {
 		CMmsgPrint (CMmsgAppError, "Error adding variable to container in %s:%d\n",__FILE__,__LINE__);
 		goto Abort;
 	}
-	if ((interface->Coupler = NFcouplerGet (interface->Component, interface->Parent)) == (NFcoupler_p *) NULL) {
+	if ((interface->Coupler = NFcouplerGet (interface->Component, (NFcomponent_p) (interface->Parent))) == (NFcoupler_p) NULL) {
 		CMmsgPrint (CMmsgAppError, "Interface error in %s:%d\n", __FILE__,__LINE__);
 		goto Abort;
 	}

@@ -116,11 +116,24 @@ CMreturn NFlistAddItem    (NFlist_p, void *);
 CMreturn NFlistRemoveItem (NFlist_p, void *);
 
 /****************************************************************************************************************
+ * Element
+*****************************************************************************************************************/
+typedef struct NFelement_s {
+	size_t         VertexNum;
+	NFcoordinate_p Vertexes;
+	NFextent_t     Extent;
+} NFelement_t, *NFelement_p;
+
+NFelement_p NFelementCreate     ();
+void        NFelementFree       (NFelement_p);
+
+/****************************************************************************************************************
  * Domain
 *****************************************************************************************************************/
 typedef struct NFdomain_s {
 	size_t Num;
 	NFio_p IO;
+	NFelement_p *Elements;
 } NFdomain_t, *NFdomain_p;
 
 NFdomain_p NFdomainCreate     ();
@@ -403,8 +416,8 @@ typedef struct NFcoupler_s {
 
 } NFcoupler_t, *NFcoupler_p;
 
-NFcoupler_p NFcouplerGet  (NFdomain_p, NFdomain_p);
-void        NFcouplerFree (NFcoupler_t *);
+NFcoupler_p NFcouplerGet  (NFcomponent_p, NFcomponent_p);
+void        NFcouplerFree (NFcoupler_p);
 
 /****************************************************************************************************************
  * Interface
