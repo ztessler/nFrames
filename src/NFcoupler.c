@@ -5,7 +5,7 @@
 /****************************************************************************************************************
  * Coupler create
 *****************************************************************************************************************/
-NFcoupler_p NFcouplerGet (NFcomponent_p srcComponent, NFcomponent_p dstComponent) {
+NFcoupler_p NFcouplerGet (NFcomponent_p srcComponent, NFcomponent_p dstComponent, NFcoupler type) {
 	size_t i;
 	NFobject_p rootObj;
 	NFcompModel_p model;
@@ -24,7 +24,8 @@ NFcoupler_p NFcouplerGet (NFcomponent_p srcComponent, NFcomponent_p dstComponent
 	for (i = 0; i < model->Couplers->Num; ++i) {
 		coupler = (NFcoupler_p) (model->Couplers->List [i]);
 		if ((coupler->SrcDomain == srcComponent->Domain) &&
-		    (coupler->DstDomain == dstComponent->Domain)) return (coupler);
+		    (coupler->DstDomain == dstComponent->Domain) &&
+		    (coupler->Type      == type)) return (coupler);
 	}
 
 	if ((coupler = (NFcoupler_p) malloc (sizeof (NFcoupler_t))) == (NFcoupler_p) NULL) {
@@ -33,6 +34,7 @@ NFcoupler_p NFcouplerGet (NFcomponent_p srcComponent, NFcomponent_p dstComponent
 	}
 	coupler->SrcDomain = srcComponent->Domain;
 	coupler->DstDomain = dstComponent->Domain;
+	coupler->Type = type;
 	if (NFlistAddItem (model->Couplers, (void *) coupler) != CMsucceeded) {
 		CMmsgPrint (CMmsgAppError,"Coupler list error in %s:%d\n",__FILE__,__LINE__);
 		NFcouplerFree (coupler);

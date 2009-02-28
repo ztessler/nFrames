@@ -79,10 +79,10 @@
 	</input>
 	<container name="land-surface" layout="land_type" time_step="1 day" states="landsurf_state.nc">
 		<!--Land-surface component-->
-		<interface name="air temperature" relation="parent" component="air temperature"     variable="air temperature" default="nodata"/>
-		<interface name="precipitation" relation="parent" component="precipitation_input" variable="precipitation"   default="nodata"/>
-		<interface name="natural" relation="parent" component="land_type"           variable="natural"            default="0.0"/>
-		<interface name="wetland" relation="parent" component="land_type"           variable="wetland"         default="0.0"/>
+		<interface name="air temperature" relation="parent" component="air temperature" coupler="surface"  variable="air temperature" default="nodata"/>
+		<interface name="precipitation" relation="parent" component="precipitation_input" coupler="flux" variable="precipitation"   default="nodata"/>
+		<interface name="natural" relation="parent" component="land_type" coupler="flux"          variable="natural"            default="0.0"/>
+		<interface name="wetland" relation="parent" component="land_type" coupler="flux"          variable="wetland"         default="0.0"/>
 		<region name="wild_region" condition="[a] &gt; 0.0">
 			<alias name="wetland" type="variable" alias="a"/>
 		</region>
@@ -108,7 +108,7 @@
 	</container>
 	<container name="rivers" layout="river-network" time_step="6 hours" states="rivers_state.nc">
 		<!--River component-->
-		<interface name="precipitation" relation="parent" component="precipitation_input" variable="precipitation" default="nodata"/>
+		<interface name="precipitation" relation="parent" component="precipitation_input" coupler="flux" variable="precipitation" default="nodata"/>
 		<route name="discharge" unit="m^3/s"/>
 	</container>
 	<container name="reservoirs" layout="reservoirs" time_step="5 days" states="reservoir_states.nc">

@@ -44,6 +44,14 @@ NFobject_p NFparseModInterfaceCreate (XML_Parser parser,NFobject_p parent,const 
 		CMmsgPrint (CMmsgUsrError, "Invalid interface [%s] component [%s] in line %d!\n",name, attrib, XML_GetCurrentLineNumber (parser));
 		goto Abort;
 	}
+	if ((attrib = NFparseGetAttribute (attr, NFcomponentStr, (char *) NULL)) == (char *) NULL) {
+		CMmsgPrint (CMmsgUsrError, "Missing interface [%s] component in %d!\n",name, XML_GetCurrentLineNumber (parser));
+		goto Abort;
+	}
+	if ((component = NFobjListFindItemByName (list,attrib)) == (NFobject_p) NULL) {
+		CMmsgPrint (CMmsgUsrError, "Invalid interface [%s] component [%s] in line %d!\n",name, attrib, XML_GetCurrentLineNumber (parser));
+		goto Abort;
+	}
 	if ((attrib = NFparseGetAttribute (attr, NFnumVariableStr, (char *) NULL)) == (char *) NULL) {
 		CMmsgPrint (CMmsgUsrError, "Missing interface [%s] variable in line %d!\n",name,XML_GetCurrentLineNumber (parser));
 		goto Abort;
@@ -67,6 +75,12 @@ NFobject_p NFparseModInterfaceCreate (XML_Parser parser,NFobject_p parent,const 
 	if ((module->Variable = (NFnumVariable_p) NFobjectCreate (name,NFnumVariable))  == (NFnumVariable_p) NULL) {
 		CMmsgPrint (CMmsgAppError, "Derivative variable creation error in %s:%d.\n",__FILE__,__LINE__);
 		goto Abort;
+	}
+	if ((attrib = NFparseGetAttribute (attr, NFattrCouplerStr, (char *) NULL)) != (char *) NULL) {
+		if      (strcmp (attrib,NFkeyCouplerFluxStr)  == 0) module->CouplerType = NFcouplerFlux;
+		else if (strcmp (attrib,NFkeyCouplerPointStr) == 0) module->CouplerType = NFcouplerPoint;
+		else if (strcmp (attrib,NFkeyCouplerSurfStr)  == 0) module->CouplerType = NFcouplerSurface;
+		// TODO set interface weight when the coupler type is point!
 	}
 	module->Component = (NFcomponent_p) component;
 	module->Variable->Parent  = (NFobject_p) module;
@@ -101,7 +115,7 @@ CMreturn NFparseModInterfaceFinalize (NFobject_p parent, NFobject_p object) {
 		CMmsgPrint (CMmsgAppError, "Error adding variable to container in %s:%d\n",__FILE__,__LINE__);
 		goto Abort;
 	}
-	if ((interface->Coupler = NFcouplerGet (interface->Component, (NFcomponent_p) (interface->Parent))) == (NFcoupler_p) NULL) {
+	if ((interface->Coupler = NFcouplerGet (interface->Component, (NFcomponent_p) (interface->Parent), interface->CouplerType)) == (NFcoupler_p) NULL) {
 		CMmsgPrint (CMmsgAppError, "Interface error in %s:%d\n", __FILE__,__LINE__);
 		goto Abort;
 	}

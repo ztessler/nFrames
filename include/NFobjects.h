@@ -39,6 +39,7 @@ extern "C" {
 #define NFextentStr           "extent"
 
 #define NFattrBeginStr        "begin"
+#define NFattrCouplerStr      "coupler"
 #define NFattrDifferenceStr   "difference"
 #define NFattrDirectionStr    "direction"
 #define NFattrEndStr          "end"
@@ -60,10 +61,14 @@ extern "C" {
 #define NFattrVersionStr      "version"
 #define NFattrXCoordStr       "xcoord"
 #define NFattrYCoordStr       "ycoord"
+#define NFattrWeightStr       "weight"
 
 #define NFkeyBackwardStr      "backward"
 #define NFkeyCenteredStr      "centered"
 #define NFkeyForwardStr       "forward"
+#define NFkeyCouplerFluxStr   "flux"
+#define NFkeyCouplerPointStr  "point"
+#define NFkeyCouplerSurfStr   "surface"
 #define NFkeyDirectionXStr    "x"
 #define NFkeyDirectionYStr    "y"
 #define NFkeyDirectionZStr    "z"
@@ -411,12 +416,15 @@ typedef struct NFmodEquation_s {
 /****************************************************************************************************************
  * Coupler
 *****************************************************************************************************************/
+typedef enum { NFcouplerFlux, NFcouplerPoint, NFcouplerSurface } NFcoupler;
+
 typedef struct NFcoupler_s {
+	NFcoupler  Type;
 	NFdomain_p SrcDomain, DstDomain;
 
 } NFcoupler_t, *NFcoupler_p;
 
-NFcoupler_p NFcouplerGet  (NFcomponent_p, NFcomponent_p);
+NFcoupler_p NFcouplerGet  (NFcomponent_p, NFcomponent_p, NFcoupler);
 void        NFcouplerFree (NFcoupler_p);
 
 /****************************************************************************************************************
@@ -431,7 +439,9 @@ typedef struct NFmodInterface_s {
 	NFnumVariable_p  Variable;
 	NFnumVariable_p  InputVar;
 	NFcomponent_p    Component;
+	NFcoupler        CouplerType;
 	NFcoupler_p      Coupler;
+	NFnumVariable_p  Weight;
 } NFmodInterface_t, *NFmodInterface_p;
 
 /****************************************************************************************************************

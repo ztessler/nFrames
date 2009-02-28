@@ -495,10 +495,12 @@ static void _NFmodEquationPrint (NFobject_p object) {
 static CMreturn _NFmodInterfaceInit (NFobject_p object) {
 	NFmodInterface_p module = (NFmodInterface_p) object;
 
-	module->Variable  = (NFnumVariable_p) NULL;
-	module->InputVar  = (NFnumVariable_p) NULL;
-	module->Component = (NFcomponent_p)   NULL;
-	module->Coupler   = (NFcoupler_p)     NULL;
+	module->Variable    = (NFnumVariable_p) NULL;
+	module->InputVar    = (NFnumVariable_p) NULL;
+	module->Component   = (NFcomponent_p)   NULL;
+	module->CouplerType = NFcouplerFlux;
+	module->Coupler     = (NFcoupler_p)     NULL;
+	module->Weight      = (NFnumVariable_p) NULL;
 	return (CMsucceeded);
 }
 /****************************************************************************************************************/
