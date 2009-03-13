@@ -441,7 +441,6 @@ typedef struct NFmodInterface_s {
 	NFcomponent_p    Component;
 	NFcoupler        CouplerType;
 	NFcoupler_p      Coupler;
-	NFnumVariable_p  Weight;
 } NFmodInterface_t, *NFmodInterface_p;
 
 /****************************************************************************************************************

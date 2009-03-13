@@ -62,7 +62,6 @@
            relation (root|parent|own) #REQUIRED
                       component CDATA #REQUIRED
         coupler (flux|points|surface) #REQUIRED
-                               weight #IMPLIED 
                        variable CDATA #REQUIRED
                         default CDATA #REQUIRED>
 
