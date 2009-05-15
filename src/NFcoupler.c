@@ -50,3 +50,14 @@ void NFcouplerFree (NFcoupler_p coupler) {
 	free (coupler);
 	return;
 }
+
+CMreturn NFcouplerBuild (NFcoupler_p coupler) {
+	NFcompInput_p srcDomain;
+	NFcompInput_p dstDomain;
+
+	CMmsgPrint (CMmsgInfo,"Building coupler\n");
+
+	return (CMsucceeded);
+Abort:
+	return (CMfailed);
+}

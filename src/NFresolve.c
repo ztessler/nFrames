@@ -99,7 +99,7 @@ Abort:
 CMreturn NFmodelResolve (NFcompModel_p model, bool report) {
 	size_t i;
 	CMreturn ret;
-	NFobject_p component;
+	NFobject_p  component;
 
 	for (i = 0;i < model->Components->Num; ++i) {
 		if ((component = model->Components->List [i]) == (NFobject_p) NULL) {
@@ -117,6 +117,12 @@ CMreturn NFmodelResolve (NFcompModel_p model, bool report) {
 			break;
 		}
 		if (ret == CMfailed) goto Abort;
+	}
+	for (i = 0; i < model->Couplers->Num; ++i) {
+		if (NFcouplerBuild ((NFcoupler_p) (model->Couplers->List [i])) != CMsucceeded) {
+			CMmsgPrint (CMmsgAppError, "Resolving coupler failed in %s:%d!\n,"__FILE__,__LINE__);
+			goto Abort;
+		}
 	}
 	for (i = 0;i < model->TimeSteps->Num; ++i) {
 		printf ("%d %s\n",(int) ((NFtimeStep_p) model->TimeSteps->List [i])->Length,

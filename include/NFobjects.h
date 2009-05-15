@@ -424,8 +424,9 @@ typedef struct NFcoupler_s {
 
 } NFcoupler_t, *NFcoupler_p;
 
-NFcoupler_p NFcouplerGet  (NFcomponent_p, NFcomponent_p, NFcoupler);
-void        NFcouplerFree (NFcoupler_p);
+NFcoupler_p NFcouplerGet   (NFcomponent_p, NFcomponent_p, NFcoupler);
+void        NFcouplerFree  (NFcoupler_p);
+CMreturn    NFcouplerBuild (NFcoupler_p);
 
 /****************************************************************************************************************
  * Interface
