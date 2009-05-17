@@ -35,6 +35,8 @@ NFcoupler_p NFcouplerGet (NFcomponent_p srcComponent, NFcomponent_p dstComponent
 	coupler->SrcDomain = srcComponent->Domain;
 	coupler->DstDomain = dstComponent->Domain;
 	coupler->Type = type;
+	coupler->Mapping = (void *) NULL;
+
 	if (NFlistAddItem (model->Couplers, (void *) coupler) != CMsucceeded) {
 		CMmsgPrint (CMmsgAppError,"Coupler list error in %s:%d\n",__FILE__,__LINE__);
 		NFcouplerFree (coupler);
@@ -51,13 +53,38 @@ void NFcouplerFree (NFcoupler_p coupler) {
 	return;
 }
 
-CMreturn NFcouplerBuild (NFcoupler_p coupler) {
-	NFcompInput_p srcDomain;
-	NFcompInput_p dstDomain;
-
-	CMmsgPrint (CMmsgInfo,"Building coupler\n");
+static CMreturn _NFcouplerMapping (NFcoupler_p coupler, size_t item) {
 
 	return (CMsucceeded);
-Abort:
+}
+static CMreturn _NFcouplerBuildFlux (NFcoupler_p coupler) {
+	size_t item;
+
+	for (item = 0; item < coupler->DstDomain->Num; ++item) {
+		if (_NFcouplerMapping (coupler, item) == CMfailed) return (CMfailed);
+	}
+	return (CMsucceeded);
+}
+
+static CMreturn _NFcouplerBuildSurface (NFcoupler_p coupler) {
+	return (CMsucceeded);
+}
+
+static CMreturn _NFcouplerBuildPoint (NFcoupler_p coupler) {
+	return (CMsucceeded);
+}
+
+CMreturn NFcouplerBuild (NFcoupler_p coupler) {
+
+	if ((coupler->Mapping = (void *) calloc (coupler->DstDomain->Num, sizeof (NFmapping_t))) == (void *) NULL) {
+		CMmsgPrint (CMmsgSysError,"Memory allocation error in %s:%d\n",__FILE__,__LINE__);
+		return (CMfailed);
+	}
+	switch (coupler->Type) {
+	case NFcouplerFlux:    return (_NFcouplerBuildFlux    (coupler));
+	case NFcouplerSurface: return (_NFcouplerBuildSurface (coupler));
+	case NFcouplerPoint:   return (_NFcouplerBuildPoint   (coupler));
+	}
+	CMmsgPrint (CMmsgAppError,"Invalid coupler type in %s:%d\n",__FILE__,__LINE__);
 	return (CMfailed);
 }

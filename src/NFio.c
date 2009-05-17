@@ -12,25 +12,29 @@ NFio_p NFioCreate () {
 	io->ItemNum       = 0;
 	io->TimeLine      = (NFtimeLine_p)             NULL;
 	io->PluginData    = (void *)                   NULL;
-	io->GetMapping    = (NFioGetMappingFunc)       NULL;
 	io->Close         = (NFioCloseFunc)            NULL;
+	io->GetItem       = (NFioGetItemFunc)          NULL;
+	io->GetItems      = (NFioGetItemsFunc)         NULL;
+	io->GetVertexes   = (NFioGetVertexesFunc)      NULL;
+	io->ProjectXY2UV  = (NFioProjectXY2UVFunc)     NULL;
 	io->VarHandleFunc = (NFioVariableHandleFunc)   NULL;
 	io->VarTypeFunc   = (NFioVariableTypeFunc)     NULL;
 	io->VarLoadFunc   = (NFioVariableLoadFunc)     NULL;
 	return (io);
 }
 
-NFmapping_p NFioMapping (NFio_p io,size_t num,NFcoordinate_t *coordinates) {
+int NFioGetItem (NFio_p io, NFcoordinate_p coordinate) {
 	if (io == (NFio_p) NULL) {
 		CMmsgPrint (CMmsgAppError, "Invalid io in: %s:%d\n",__FILE__,__LINE__);
-		return ((NFmapping_p) NULL);
+		return (CMfailed);
 	}
-	if (io->GetMapping == (NFioGetMappingFunc) NULL) {
-		CMmsgPrint (CMmsgAppError, "Requesting mapping from incomplete io in: %s:%d\n",__FILE__,__LINE__);
-		return ((NFmapping_p) NULL);
+	if (io->GetItem == (NFioGetItemFunc) NULL) {
+		CMmsgPrint (CMmsgAppError, "Requesting item from incomplete io in: %s:%d\n",__FILE__,__LINE__);
+		return (CMfailed);
 	}
-	return (io->GetMapping (io, num, coordinates));
+	return (io->GetItem (io, coordinate));
 }
+
 
 void NFioFree (NFio_p io) {
 	if (io == (NFio_p) NULL) {

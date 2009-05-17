@@ -421,7 +421,7 @@ typedef enum { NFcouplerFlux, NFcouplerPoint, NFcouplerSurface } NFcoupler;
 typedef struct NFcoupler_s {
 	NFcoupler  Type;
 	NFdomain_p SrcDomain, DstDomain;
-
+	void      *Mapping;
 } NFcoupler_t, *NFcoupler_p;
 
 NFcoupler_p NFcouplerGet   (NFcomponent_p, NFcomponent_p, NFcoupler);
