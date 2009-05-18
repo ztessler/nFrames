@@ -62,6 +62,8 @@ typedef NFvarHandle (*NFioVariableHandleFunc) (NFio_p, const char *);
 typedef NFvarType   (*NFioVariableTypeFunc)   (NFio_p, NFvarHandle);
 typedef bool        (*NFioVariableLoadFunc)   (NFio_p, NFvarHandle, NFvarType, size_t, void *);
 
+int NFioDefaultProjectXY2UV (NFio_p, NFcoordinate_p, NFcoordinate_p);
+
 NFio_p      NFioCreate ();
 void        NFioFree   (NFio_p);
 int         NFioGetItem        (NFio_p, NFcoordinate_p);

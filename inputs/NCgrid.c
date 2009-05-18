@@ -111,7 +111,7 @@ static NFvarType _NCgridVariableType (NFio_p io, NFvarHandle varHandle) {
 }
 
 static bool _NCgridVariableLoad (NFio_p io, NFvarHandle varHandle, NFvarType varType, size_t step, void *data) {
-	
+
 	return (true);
 }
 
@@ -138,7 +138,7 @@ static void _NCgridFree (NCgrid_p ncGrid) {
 }
 
 static NCgrid_p _NCgridRealloc (NCgrid_p ncGrid) {
-	
+
 	if ((ncGrid->FileNames = (char **) realloc (ncGrid->FileNames, (ncGrid->FileNum + 1) * sizeof (char *))) == (char **) NULL) {
 		CMmsgPrint (CMmsgSysError, "Memory allocation error in %s:%d!\n",__FILE__,__LINE__);
 		goto Abort;
@@ -214,6 +214,19 @@ Abort:
 	return ((NCgrid_p) NULL);
 }
 
+static int _NCgridGetItem (NFio_p io, NFcoordinate_p coordinate) {
+
+	return (CMfailed);
+}
+
+static int _NCgridGetItemList (NFio_p io, NFextent_p extent, size_t *itemBuffer, size_t *itemBufferLen) {
+	return (CMfailed);
+}
+
+static int _NCgridGetVertexes (NFio_p io, size_t itemID, NFcoordinate_p vertexBuffel, size_t vertexBufferLen) {
+	return (CMfailed);
+}
+
 void _NCgridClose (NFio_p io) {
 	_NCgridFree ((NCgrid_p) io->PluginData);
 }
@@ -249,10 +262,10 @@ NFio_p Open_NCgrid (const char *url, NFtime_p beginTime, NFtime_p endTime, ut_sy
 	if ((bundleTimeStep = NFtimeStepCreate ()) == (NFtimeStep_p) NULL) {
 		CMmsgPrint (CMmsgAppError, "Timestep object creation error in %s:%d!\n",__FILE__,__LINE__);
 		goto Abort;
-		
+
 	}
 	bundleTimeUnit = NCurlGetBundleTimeUnit (url);
-	if (((urlType = NCurlGetType (url)) == NCurlInvalid) || ((urlAddress = NCurlGetAddress (url)) == (const char *) NULL)) { 
+	if (((urlType = NCurlGetType (url)) == NCurlInvalid) || ((urlAddress = NCurlGetAddress (url)) == (const char *) NULL)) {
 		CMmsgPrint (CMmsgAppError, "Ivalid URL: %s!\n", url);
 		goto Abort;
 	}
@@ -291,7 +304,7 @@ NFio_p Open_NCgrid (const char *url, NFtime_p beginTime, NFtime_p endTime, ut_sy
 	if ((cvConverter = ut_get_converter (ncGrid->Time [0]->Unit, baseTimeUnit)) == (cv_converter *) NULL) {
 		CMmsgPrint (CMmsgAppError, "Time converter error!n");
 		switch (ut_get_status ()) {
-		case UT_BAD_ARG:         CMmsgPrint (CMmsgAppError, "unit1 or unit2 is NULL.\n");                         break; 
+		case UT_BAD_ARG:         CMmsgPrint (CMmsgAppError, "unit1 or unit2 is NULL.\n");                         break;
 		case UT_NOT_SAME_SYSTEM: CMmsgPrint (CMmsgAppError, "unit1 and unit2 belong to different unit-systems."); break;
 		default:                 CMmsgPrint (CMmsgAppError, "Conversion between the units is not possible.");     break;
 		}
@@ -333,7 +346,7 @@ NFio_p Open_NCgrid (const char *url, NFtime_p beginTime, NFtime_p endTime, ut_sy
 			if ((cvConverter = ut_get_converter (ncGrid->Time [ncGrid->FileNum - 1]->Unit, baseTimeUnit)) == (cv_converter *) NULL) {
 				CMmsgPrint (CMmsgAppError, "Time converter error!n");
 				switch (ut_get_status ()) {
-				case UT_BAD_ARG:         CMmsgPrint (CMmsgAppError, "unit1 or unit2 is NULL.\n");                         break; 
+				case UT_BAD_ARG:         CMmsgPrint (CMmsgAppError, "unit1 or unit2 is NULL.\n");                         break;
 				case UT_NOT_SAME_SYSTEM: CMmsgPrint (CMmsgAppError, "unit1 and unit2 belong to different unit-systems."); break;
 				default:                 CMmsgPrint (CMmsgAppError, "Conversion between the units is not possible.");     break;
 				}
@@ -352,6 +365,10 @@ NFio_p Open_NCgrid (const char *url, NFtime_p beginTime, NFtime_p endTime, ut_sy
 		}
 	}
 	io->PluginData    = (void *) ncGrid;
+	io->GetItem       = _NCgridGetItem;
+	io->GetItemList   = _NCgridGetItemList;
+	io->GetVertexes   = _NCgridGetVertexes;
+	io->ProjectXY2UV  =  NFioDefaultProjectXY2UV; // TODO Handle proj4 entries
 	io->Close         = _NCgridClose;
 	io->VarHandleFunc = _NCgridVariableHandle;
 	io->VarTypeFunc   = _NCgridVariableType;

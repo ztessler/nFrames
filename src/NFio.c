@@ -71,6 +71,16 @@ int NFioProjextXY2UV (NFio_p io, NFcoordinate_p xyCoord, NFcoordinate_p uvCoord)
 	return (io->ProjectXY2UV (io, xyCoord, uvCoord));
 }
 
+int NFioDefaultProjectXY2UV (NFio_p io, NFcoordinate_p xyCoord, NFcoordinate_p uvCoord) {
+	uvCoord->X = xyCoord->X;
+	uvCoord->Y = xyCoord->Y;
+	if ((uvCoord->X < -180.0) || (uvCoord->X > 360.0))
+		CMmsgPrint (CMmsgWarning,"Longitude is outside of valid range!\n");
+	if ((uvCoord->X  <  -90.0) || (uvCoord->Y > 90.0))
+		CMmsgPrint (CMmsgWarning,"Latitude is outside of valid range!\n");
+	return (CMsucceeded);
+}
+
 void NFioFree (NFio_p io) {
 	if (io == (NFio_p) NULL) {
 		CMmsgPrint (CMmsgAppError, "Invalid io in: %s:%d\n",__FILE__,__LINE__);
