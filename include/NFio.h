@@ -44,7 +44,7 @@ typedef struct NFio_s {
 	void          *PluginData;
 	void         (*Close)         (struct NFio_s *);
 	int          (*GetItem)       (struct NFio_s *, NFcoordinate_p);
-	int          (*GetItems)      (struct NFio_s *, NFextent_p, size_t *, size_t *);
+	int          (*GetItemList)   (struct NFio_s *, NFextent_p, size_t *, size_t *);
 	int          (*GetVertexes)   (struct NFio_s *, size_t, NFcoordinate_p, size_t *);
 	CMreturn     (*ProjectXY2UV)  (struct NFio_s *, NFcoordinate_p, NFcoordinate_p);
 	NFvarHandle  (*VarHandleFunc) (struct NFio_s *, const char *);
@@ -55,7 +55,7 @@ typedef struct NFio_s {
 typedef NFio_p      (*NFioOpenFunc)           (const char *, NFtime_p, NFtime_p, ut_system *);
 typedef void        (*NFioCloseFunc)          (NFio_p);
 typedef int         (*NFioGetItemFunc)        (NFio_p, NFcoordinate_p);
-typedef int         (*NFioGetItemsFunc)       (NFio_p, NFextent_p, size_t *, size_t *);
+typedef int         (*NFioGetItemListFunc)    (NFio_p, NFextent_p, size_t *, size_t *);
 typedef int         (*NFioGetVertexesFunc)    (NFio_p, size_t, NFcoordinate_p, size_t *);
 typedef CMreturn    (*NFioProjectXY2UVFunc)   (NFio_p, NFcoordinate_p, NFcoordinate_p);
 typedef NFvarHandle (*NFioVariableHandleFunc) (NFio_p, const char *);
@@ -65,7 +65,7 @@ typedef bool        (*NFioVariableLoadFunc)   (NFio_p, NFvarHandle, NFvarType, s
 NFio_p      NFioCreate ();
 void        NFioFree   (NFio_p);
 int         NFioGetItem        (NFio_p, NFcoordinate_p);
-int         NFioGetItems       (NFio_p, NFextent_p, size_t *, size_t *);
+int         NFioGetItemList    (NFio_p, NFextent_p, size_t *, size_t *);
 int         NFioGetVertexes    (NFio_p, size_t, NFcoordinate_p, size_t *);
 CMreturn    NFioProjectXY2UV   (NFio_p, NFcoordinate_p, NFcoordinate_p);
 NFvarHandle NFioVariableHandle (NFio_p, const char *);
