@@ -223,7 +223,7 @@ static int _NCgridGetItemList (NFio_p io, NFextent_p extent, size_t *itemBuffer,
 	return (CMfailed);
 }
 
-static int _NCgridGetVertexes (NFio_p io, size_t itemID, NFcoordinate_p vertexBuffel, size_t vertexBufferLen) {
+static int _NCgridGetVertexes (NFio_p io, size_t itemID, NFcoordinate_p vertexBuffer, size_t *vertexBufferLen) {
 	return (CMfailed);
 }
 
