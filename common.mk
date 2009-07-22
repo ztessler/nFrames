@@ -9,9 +9,9 @@ export UNIXMAKE=make
 endif
 ifeq ($(UNIX),Darwin)
 export UNIXCC=gcc
-export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE -I/usr/local/include
+export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE -I/sw/include
 export UNIXLIBS=-L/usr/local/lib -lexpat -ldl -ludunits2 -lm
-export UNIXPLGLNK=-dynamiclib -flat_namespace -undefined suppress -L/usr/local/lib -lnetcdf
+export UNIXPLGLNK=-dynamiclib -flat_namespace -undefined suppress -L/sw/lib -lnetcdf
 export UNIXMAKE=make
 endif
 ifeq ($(UNIX),SunOS)
