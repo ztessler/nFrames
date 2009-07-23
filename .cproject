@@ -24,40 +24,38 @@
 <folderInfo id="cdt.managedbuild.config.gnu.exe.debug.1916607297.1404789736." name="/" resourcePath="">
 <toolChain id="cdt.managedbuild.toolchain.gnu.macosx.base.635861351" name="MacOSX GCC" nonInternalBuilderId="cdt.managedbuild.target.gnu.builder.macosx.base" resourceTypeBasedDiscovery="false" superClass="cdt.managedbuild.toolchain.gnu.macosx.base">
 <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.MachO;org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF;org.eclipse.cdt.core.Cygwin_PE" id="cdt.managedbuild.target.gnu.platform.macosx.base.336883874" name="Debug Platform" osList="macosx" superClass="cdt.managedbuild.target.gnu.platform.macosx.base"/>
-<builder buildPath="${workspace_loc:/nFrames}" id="cdt.managedbuild.target.gnu.builder.macosx.base.286598252" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.macosx.base">
-<outputEntries>
-<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
-</outputEntries>
-</builder>
+<builder buildPath="${workspace_loc:/nFrames}" id="cdt.managedbuild.target.gnu.builder.macosx.base.286598252" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.macosx.base"/>
 <tool id="cdt.managedbuild.tool.macosx.c.linker.macosx.base.472905798" name="MacOS X C Linker" superClass="cdt.managedbuild.tool.macosx.c.linker.macosx.base"/>
 <tool id="cdt.managedbuild.tool.macosx.cpp.linker.macosx.base.151111284" name="MacOS X C++ Linker" superClass="cdt.managedbuild.tool.macosx.cpp.linker.macosx.base">
 <option id="macosx.cpp.link.option.libs.877309186" name="Libraries (-l)" superClass="macosx.cpp.link.option.libs" valueType="libs">
 <listOptionValue builtIn="false" value="CM10"/>
 </option>
-<option id="macosx.cpp.link.option.paths.872346498" name="Library search path (-L)" superClass="macosx.cpp.link.option.paths"/>
 <inputType id="cdt.managedbuild.tool.macosx.cpp.linker.input.959784279" superClass="cdt.managedbuild.tool.macosx.cpp.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 <additionalInput kind="additionalinput" paths="$(LIBS)"/>
 </inputType>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.assembler.macosx.base.1540616966" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.macosx.base">
-<option id="gnu.both.asm.option.include.paths.297410952" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths"/>
+<option id="gnu.both.asm.option.include.paths.665253370" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nFrames/include}&quot;"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.assembler.input.1489357111" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.archiver.macosx.base.1006041723" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.macosx.base"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.macosx.base.945809996" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.macosx.base">
-<option id="gnu.cpp.compiler.option.include.paths.291585439" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths"/>
+<option id="gnu.cpp.compiler.option.include.paths.283325783" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nFrames/include}&quot;"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.813737004" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.macosx.base.1702528804" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.macosx.base">
-<option id="gnu.c.compiler.option.include.paths.2087433541" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths"/>
+<option id="gnu.c.compiler.option.include.paths.686385694" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nFrames/include}&quot;"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2029193591" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 </toolChain>
 </folderInfo>
-<sourceEntries>
-<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-</sourceEntries>
 </configuration>
 </storageModule>
 
