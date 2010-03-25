@@ -286,7 +286,8 @@ static void XMLCALL _NFentryText (void *argPtr, const char *str, int len) {
 
 	strncpy (data->Buffer, str + start, end - start);
 	data->Buffer [end - start] = '\0';
-	object->Notes = CMstrAppend (object->Notes, data->Buffer, "\n");
+//	TODO Initialize
+//	object->Notes = CMstrAppend (object->Notes, data->Buffer, "\n");
 }
 
 /****************************************************************************************************************
