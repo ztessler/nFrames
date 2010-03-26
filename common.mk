@@ -2,7 +2,7 @@ UNIX=$(shell uname)
 
 ifeq ($(UNIX),Linux)
 export UNIXCC=gcc
-export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE -I/usr/local/include
+export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE -fPIC -I/usr/local/include
 export UNIXLIBS=-rdynamic -L/usr/local/lib -lexpat -ldl -ludunits2 -lm
 export UNIXPLGLNK=-shared -nostartfiles -L/usr/local/lib -lnetcdf
 export UNIXMAKE=make

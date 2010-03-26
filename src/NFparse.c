@@ -255,7 +255,7 @@ static void XMLCALL _NFentryText (void *argPtr, const char *str, int len) {
 	size_t i, start, end;
 	bool white;
 	NFdata_t *data;
-	NFobject_p object;
+//	NFobject_p object;
 	XML_Parser parser = (XML_Parser) argPtr;
 
 	data = (NFdata_t *) XML_GetUserData (parser);
