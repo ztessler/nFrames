@@ -1,24 +1,33 @@
 UNIX=$(shell uname)
 
 ifeq ($(UNIX),Linux)
-export UNIXCC=gcc
-export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE -fPIC -I/usr/local/include
-export UNIXLIBS=-rdynamic -lexpat -ldl -ludunits2 -lm
+ifndef ($(CUSTOM_LIB))
+	CUSTOM_LIB=-rdynamic
+endif
 export UNIXPLGLNK=-shared -nostartfiles -lnetcdf
-export UNIXMAKE=make
 endif
+
 ifeq ($(UNIX),Darwin)
-export UNIXCC=gcc
-export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE -I/sw/include
-export UNIXLIBS=-L/sw/lib -lexpat -ldl -ludunits2 -lm
-export UNIXPLGLNK=-dynamiclib -flat_namespace -undefined suppress -L/sw/lib -lnetcdf
-export UNIXMAKE=make
+ifndef ($(CUSTOM_INC))
+	CUSTOM_INC=-I/sw/include
 endif
+ifndef ($(CUSTOM_LIB))
+	CUSTOM_LIB=-L/sw/lib
+endif
+export UNIXPLGLNK=-dynamiclib -flat_namespace -undefined suppress $(CUSTOM_LIB) -lnetcdf
+endif
+
 ifeq ($(UNIX),SunOS)
-export UNIXAR=ar -ru
-export UNIXCC=gcc
-export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE -L../../CMlib/lib -I/usr/local/netcdf/include -I/usr/local/udunits/include
-export UNIXLIBS=-rdynamic -lexpat -ldl -lm
-export UNIXPLGLNK=-shared -nostartfiles
-export UNIXMAKE=make
+ifndef ($(CUSTOM_INC))
+	CUSTOM_INC=-I/usr/local/netcdf/include -I/usr/local/udunits/include
 endif
+ifndef ($(CUSTOM_LIB))
+	CUSTOM_LIB=-rdynamic
+endif
+export UNIXPLGLNK=-shared -nostartfiles
+endif
+
+export UNIXCC=gcc
+export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE $(CUSTOM_INC)
+export UNIXLIBS=$(CUSTOM_LIB) -L../../CMlib/lib -lexpat -ldl -ludunits2 -lm
+export UNIXMAKE=make
