@@ -1,4 +1,7 @@
 UNIX=$(shell uname)
+ifndef GHAASDIR
+export GHAASDIR=/usr/local/share/ghaas
+endif
 
 ifeq ($(UNIX),Linux)
 ifndef ($(CUSTOM_LIB))
@@ -29,5 +32,5 @@ endif
 
 export UNIXCC=gcc
 export UNIXCCOPS=-g -Wall -fsigned-char -D_GNU_SOURCE $(CUSTOM_INC)
-export UNIXLIBS=$(CUSTOM_LIB) -L../../CMlib/lib -lexpat -ldl -ludunits2 -lm
+export UNIXLIBS=$(CUSTOM_LIB) -lexpat -ldl -ludunits2 -lm
 export UNIXMAKE=make

@@ -3,9 +3,9 @@ INC    = ../include
 SRC    = ../src
 OBJ    = ../obj
 BIN    = ../bin
-CC     = $(UNIXCC) $(UNIXCCOPS) -I$(INC) -I../../CMlib/include
+CC     = $(UNIXCC) $(UNIXCCOPS) -I$(INC) -I$(GHAASDIR)/include
 LINK   = $(UNIXCC)
-LIBS   = $(UNIXLIBS) -L../../CMlib/lib -lCM10 
+LIBS   = $(UNIXLIBS) -L$(GHAASDIR)/lib -lCM10
 TARGET = $(BIN)/nFrames.bin
 
 INCLUDES = $(INC)/NF.h $(INC)/NFio.h $(INC)/NFobjects.h $(INC)/NFtime.h

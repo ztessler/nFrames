@@ -3,7 +3,7 @@ INC     = ../include
 SRC     = ../modules
 OBJ     = ../obj
 PLUGINS = ../plugins
-CC      = $(UNIXCC) $(UNIXCCOPS) -I$(INC) -I../../CMlib/include
+CC      = $(UNIXCC) $(UNIXCCOPS) -I$(INC) -I$(GHAASDIR)//include
 LINK    = $(UNIXCC) $(UNIXPLGLNK)
 
 INCLUDES = $(INC)/NF.h
